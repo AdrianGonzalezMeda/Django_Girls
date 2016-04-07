@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+        <div>
+        	<h2>{{ post.title }}</h2>
+            <p>{{ post.text|upper }}</p>
+            <p>{{ post.published_date }}</p>
+        </div>
+        <hr>
+        <a href="{% url 'blog.views.post_list' %}">Volver</a>
+
+ {% endblock %}
