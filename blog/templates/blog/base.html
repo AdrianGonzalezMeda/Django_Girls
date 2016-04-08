@@ -5,15 +5,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Django Girls Tutorial</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="{% static 'css/blog.css' %}">
   <script type="text/javascript" src="{% static 'js/blog.js' %}"></script>
 </head>
 
 <body>
-	<div class="container">
-		<div>
+	<div class="jumbotron">
+		<div class="container">
             <h1><a href="">Django Girls Blog</a></h1>
         </div>
+    </div>
+	<div class="container">
 		<a href="{% url 'post_new' %}">Nuevo Post</a> <!-- usamos el nombre que le hemos dado a la url en el archivo de urls.py -->
 		{% block content %}
 			<!-- Aqui se incrustaria post_list.html -->
