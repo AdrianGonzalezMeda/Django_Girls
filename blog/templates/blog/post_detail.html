@@ -7,7 +7,7 @@
             <p>{{ post.text|upper }}</p>
             <p>{{ post.published_date }}</p>
         </div>
-        <hr>
-        <a href="{% url 'blog.views.post_list' %}">Volver</a>
+        <a href="{% url 'post_edit' pk=post.pk %}">Editar Post</a>
+        <a href="{% url 'post_list' %}">Volver</a>
 
  {% endblock %}

@@ -1,16 +1,23 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <title>Django Girls Tutorial</title>
+  <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+  <script type="text/javascript" src="{% static 'js/blog.js' %}"></script>
 </head>
 
 <body>
-	<h1>Soy la plantilla base.html</h1>
-	{% block content %}
-		<!-- Aqui se incrustaria post_list.html -->
-	{% endblock %}
-
+	<div class="container">
+		<div>
+            <h1><a href="">Django Girls Blog</a></h1>
+        </div>
+		<a href="{% url 'post_new' %}">Nuevo Post</a> <!-- usamos el nombre que le hemos dado a la url en el archivo de urls.py -->
+		{% block content %}
+			<!-- Aqui se incrustaria post_list.html -->
+		{% endblock %}
+	</div>
 </body>
 </html>
