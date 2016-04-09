@@ -2,20 +2,23 @@
 
 {% block content %}  
         <!--<p>{{ posts }}</p>  Etiqueta de django, se debe definir un diccionario en views.py cuando creas el metodo que te retorne el html, en la parte de {} -->
-    {% for p in posts %}
 
+    <div class="content container">
+    
         <div class="row">
-            <div class="col-md-4 col-xs-12">
-                <h2><a href="{% url 'post_detail' pk=p.pk %}">{{ p.title }}</a></h2>
-                <p>{{ p.published_date }}</p>
-            </div>
-            <div class="col-md-8 col-xs-12">
-                <p>{{ p.text|upper }}</p>
+            <div class="col-md-8">
+                {% for post in posts %}
+                    <div class="post">
+                        <div class="date">
+                            {{ post.published_date }}
+                        </div>
+                        <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+                        <p>{{ post.text|linebreaks }}</p>
+                    </div>
+                    <hr>
+                {% endfor %}
             </div>
         </div>
-        <hr>
-        
+    </div>
 
-        
-     {% endfor %}
  {% endblock %}
