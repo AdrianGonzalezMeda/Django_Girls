@@ -10,6 +10,7 @@
                     </div>
                     <h1><a href="">{{ post.title }}</a></h1>
                     <p>{{ post.text|linebreaks }}</p>
+                    <a class="btn btn-primary" href="{% url 'post_edit' pk=post.pk %}">Editar Post</a> | <a class="btn btn-primary" href="{% url 'post_delete' pk=post.pk %}">Borrar Post</a> | <a class="btn btn-primary" href="{% url 'post_list' %}">Volver</a>
                     <hr>
                     <h2>Comentarios</h2>
 
@@ -32,10 +33,5 @@
                 </div>
             </div>
         </div>
-        
-        <a href="{% url 'post_edit' pk=post.pk %}">Editar Post</a> | 
-        <a href="{% url 'post_list' %}">Volver</a>
-
-    
 
  {% endblock %}
