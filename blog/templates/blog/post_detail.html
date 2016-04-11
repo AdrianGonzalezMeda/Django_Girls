@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-		<div class="content container">
         <div class="row">
             <div class="col-md-8">
                 <div class="post">
@@ -12,13 +12,15 @@
                     <p>{{ post.text|linebreaks }}</p>
                     <hr>
                     <h2>Comentarios</h2>
+
                     <div class="post">
                         <h4>Comentario nuevo</h4>
                         <form method="POST"  class="post-form">{% csrf_token %}<!-- Es cuestion de seguridad, para que no te esten bombardeando los formulariosS -->
-                            {{ form.as_p}}
+                            {{ form | crispy }}
                             <button type="submit" class="save btn btn-default">Save</button>
                         </form>
                     </div>
+
                     {% for comments in comments %}
                         <div class="post">
                             <p>{{ comments.text }}</p>
@@ -30,7 +32,6 @@
                 </div>
             </div>
         </div>
-    </div>
         
         <a href="{% url 'post_edit' pk=post.pk %}">Editar Post</a> | 
         <a href="{% url 'post_list' %}">Volver</a>
