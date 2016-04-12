@@ -1,12 +1,14 @@
 {% load crispy_forms_tags %}
 
-<div class="post">
-    <h4>Comentario nuevo</h4>
-        <form method="POST"  class="post-form">{% csrf_token %}<!-- Es cuestion de seguridad, para que no te esten bombardeando los formulariosS -->
-            {{ form | crispy }}
-            <button type="submit" class="save btn btn-default">Save</button>
-        </form>
-</div>
+{% if request.user.is_authenticated %}
+    <div class="post">
+        <h4>Comentario nuevo</h4>
+            <form method="POST"  class="post-form">{% csrf_token %}<!-- Es cuestion de seguridad, para que no te esten bombardeando los formulariosS -->
+                {{ form | crispy }}
+                <button type="submit" class="save btn btn-default">Save</button>
+            </form>
+    </div>
+{% endif %}
 
  {% for comments in comments %}
     <div class="post">

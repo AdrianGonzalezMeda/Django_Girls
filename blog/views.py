@@ -19,7 +19,6 @@ def post_detail(request, pk):
         form = CommentForm(request.POST)
 
         if form.is_valid():
-            #if request.user.isauthenticated
                 comment = form.save(commit = False)#Variable distinta a la de arriba
                 comment.author = request.user
                 comment.post = post #Lo iguala al post que recogemos arriba, que va a ser uno solo
