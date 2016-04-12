@@ -1,0 +1,33 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Django Girls Tutorial</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+  <link href="http://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="{% static 'js/blog.js' %}"></script>
+</head>
+
+<body>
+	<div class="container">
+			<div class="page-header">
+				<h1><a href="{% url 'post_list' %}">Django Girls Blog</a></h1>
+			</div>
+			<nav class="top-menu top-menu:hover top-menu:visited" >
+				<ul>
+					<li>
+						<h3><a href="{% url 'post_new' %}">Nuevo Post</a></h3> <!-- usamos el nombre que le hemos dado a la url en el archivo de urls.py -->
+					</li>
+				</ul>
+			</nav>
+
+		{% block content %}
+			<!-- Aqui se incrustaria post_list.html -->
+		{% endblock %}
+	</div>
+</body>
+</html>
