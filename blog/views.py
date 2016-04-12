@@ -1,6 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
@@ -10,6 +10,7 @@ def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
     return render(request, 'blog/post_list.html', {'posts' : posts}) #Lo que pasas como contexto tienes que recogerlo luego en el html con el mismo nombre que lo que pones entre comillas
 
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments = Comment.objects.filter(post=post).order_by('created_date')
@@ -18,11 +19,13 @@ def post_detail(request, pk):
         form = CommentForm(request.POST)
 
         if form.is_valid():
-            comment = form.save(commit = False)#Variable distinta a la de arriba
-            comment.author = request.user
-            comment.post = post #Lo iguala al post que recogemos arriba, que va a ser uno solo
-            comment.save()
-            return redirect('post_detail', pk=post.pk)
+            #if request.user.isauthenticated
+                comment = form.save(commit = False)#Variable distinta a la de arriba
+                comment.author = request.user
+                comment.post = post #Lo iguala al post que recogemos arriba, que va a ser uno solo
+                comment.save()
+                return redirect('post_detail', pk=post.pk)
+
     else:
         form = CommentForm()
 
@@ -30,6 +33,7 @@ def post_detail(request, pk):
                                                     'comments' : comments,
                                                     'form' : form})
 
+@login_required(login_url='login') #decorador
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -43,6 +47,7 @@ def post_new(request):
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form' : form})
 
+@login_required(login_url='login')
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
@@ -57,6 +62,7 @@ def post_edit(request, pk):
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form' : form})
 
+@login_required(login_url='login')
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete() #Te borra automaticamente los comentarios, por que estan referenciados a un post en concreto.

@@ -14,22 +14,7 @@
                     <hr>
                     <h2>Comentarios</h2>
 
-                    <div class="post">
-                        <h4>Comentario nuevo</h4>
-                        <form method="POST"  class="post-form">{% csrf_token %}<!-- Es cuestion de seguridad, para que no te esten bombardeando los formulariosS -->
-                            {{ form | crispy }}
-                            <button type="submit" class="save btn btn-default">Save</button>
-                        </form>
-                    </div>
-
-                    {% for comments in comments %}
-                        <div class="post">
-                            <p>{{ comments.text }}</p>
-                            <div class="date">
-                                <p>Creado: {{ comments.created_date }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
+                    {% include 'blog/snippets/comments.html' %} <!-- Utilizamos esto para poder reutilizar el bloque de los comentarios que hemos metido en snippets, son como recortes que podemosincluir en otras paginas -->
                 </div>
             </div>
         </div>
