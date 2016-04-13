@@ -10,7 +10,15 @@
                     </div>
                     <h1><a href="">{{ post.title }}</a></h1>
                     <p>{{ post.text|linebreaks }}</p>
-                    <a class="btn btn-primary" href="{% url 'post_edit' pk=post.pk %}">Editar Post</a> | <a class="btn btn-primary" href="{% url 'post_delete' pk=post.pk %}">Borrar Post</a> | <a class="btn btn-primary" href="{% url 'post_list' %}">Volver</a>
+                    {% if user.is_authenticated %}
+                        {% if user == post.author or user.is_superuser %}
+                        <a class="btn btn-primary" href="{% url 'post_edit' pk=post.pk %}">Editar Post</a> | <a class="btn btn-primary" href="{% url 'post_delete' pk=post.pk %}">Borrar Post</a> | <a class="btn btn-primary" href="{% url 'post_list' %}">Volver</a>
+                        {% else %}
+                            <a class="btn btn-primary" href="{% url 'post_list' %}">Volver</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="#" class="btn btn-primary disabled" role="button">Editar Post</a> | <a href="#" class="btn btn-primary disabled" role="button">Borrar Post</a> | <a class="btn btn-primary" href="{% url 'post_list' %}">Volver</a>
+                    {% endif %}
                     <hr>
                     <h2>Comentarios</h2>
 

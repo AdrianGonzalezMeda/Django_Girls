@@ -13,21 +13,42 @@
 </head>
 
 <body>
-	<div class="container">
-			<div class="page-header">
-				<h1><a href="{% url 'post_list' %}">Django Girls Blog</a></h1>
-			</div>
-			<nav class="top-menu top-menu:hover top-menu:visited" >
-				<ul>
-					<li>
-						<h3><a href="{% url 'post_new' %}">Nuevo Post</a></h3> <!-- usamos el nombre que le hemos dado a la url en el archivo de urls.py -->
-					</li>
-				</ul>
-			</nav>
+  <div class="container">
+    <!--<div class="page-header">
+      <h1><a href="{% url 'post_list' %}">Django Girls Blog</a></h1>
+      {% if user.is_authenticated %}
+        <a class="log" href="{% url 'logout' %}">Cerrar Sesion</a>
+      {% else %}
+        <a class="log" href="{% url 'login' %}">Iniciar Sesion</a>
+      {% endif %}
+    </div> -->
+    <nav class="navbar navbar-default navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <h1><a class="navbar-brand" href="{% url 'post_list' %}"> <!-- usamos el nombre que le hemos dado a la url en el archivo de urls.py -->
+            Django Girls Blog
+          </a></h1>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+          {% if user.is_authenticated %}
+            <a type="button" href="{% url 'logout' %}" class="btn btn-warning navbar-btn navbar-right">Cerrar Sesion</a>
+            <a type="button" href="{% url 'about_me' %}" class="btn btn-warning navbar-btn navbar-right">Sobre mí</a>
+          {% else %}
+            <a type="button" href="{% url 'login' %}" class="btn btn-primary navbar-btn navbar-right">Iniciar Sesion</a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
 
-		{% block content %}
-			<!-- Aqui se incrustaria post_list.html -->
-		{% endblock %}
-	</div>
+
+
+    <nav class="top-menu top-menu:hover top-menu:visited" >
+      <h3><a href="{% url 'post_new' %}">Nuevo Post</a></h3>
+    </nav>
+      
+    {% block content %}
+      <!-- Aqui se incrustaria post_list.html -->
+    {% endblock %}
+  </div>
 </body>
 </html>
