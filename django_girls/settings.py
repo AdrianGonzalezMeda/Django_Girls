@@ -81,16 +81,7 @@ WSGI_APPLICATION = 'django_girls.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST' : 'localhost',
-        'NAME' : 'django_girls',
-        'USER' : 'root',
-        'PASSWORD' : 'root',
-        'ATOMIC_REQUESTS' : True,
-    }
-}
+from django_girls.settings_databases import *
 
 
 # Internationalization

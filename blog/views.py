@@ -1,14 +1,30 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, DetailView
+
 
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 
+
 # Create your views here.
-def post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-    return render(request, 'blog/post_list.html', {'posts' : posts}) #Lo que pasas como contexto tienes que recogerlo luego en el html con el mismo nombre que lo que pones entre comillas
+#def post_list(request):
+#    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+#    return render(request, 'blog/post_list.html', {'posts' : posts}) #Lo que pasas como contexto tienes que recogerlo luego en el html con el mismo nombre que lo que pones entre comillas
+class post_list(ListView):
+    #model = Post #hace un queryset y llama a Post.objects.all() por defecto, por eso si definimos el queryset no lo tenemos que poner
+    context_object_name = 'posts' #Puedes poner esta variable, o la funcion de abajo, son equivalentes, pero tener ambas es redundante. 
+    queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    #template_name = 'blog/post_list.html' no es necesario por que por defecto te busca un archivo de esta manera: <app>/<model>_list.html, en nuestro caso post_list.html
+
+    #Esta se podria si quisierasfiltar los resultados que te da, pero puedes ahorrartelo usando los query sets
+    #def get_context_data(self, **kwargs): #llama a la calse padre para recibir un contexo
+        # Call the base implementation first to get a context
+    #    context = super(post_list, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+    #    context['post'] = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    #    return context
 
 
 def post_detail(request, pk):
