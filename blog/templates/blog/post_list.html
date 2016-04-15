@@ -5,7 +5,7 @@
     
         <div class="row">
             <div class="col-md-8">
-                {% for post in object_list %} <!-- esta variable es la que hay que recorrer porq que es la que te devuelve la class based view -->
+                {% for post in object_list %} <!-- esta variable es la que hay que recorrer porq que es la que te devuelve la class based view  por defecto, al noser que crees la variable context object name = 'posts'-->
                     <div class="post">
                         <div class="date">
                             {{ post.published_date }}

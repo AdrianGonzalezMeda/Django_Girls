@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 
 
 from .models import Post, Comment
@@ -12,12 +12,13 @@ from .forms import PostForm, CommentForm
 #def post_list(request):
 #    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
 #    return render(request, 'blog/post_list.html', {'posts' : posts}) #Lo que pasas como contexto tienes que recogerlo luego en el html con el mismo nombre que lo que pones entre comillas
-class post_list(ListView):
-    #model = Post #hace un queryset y llama a Post.objects.all() por defecto, por eso si definimos el queryset no lo tenemos que poner
-    context_object_name = 'posts' #Puedes poner esta variable, o la funcion de abajo, son equivalentes, pero tener ambas es redundante. 
-    queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+class PostList(ListView):
+    model = Post #hace un queryset y llama a Post.objects.all() por defecto, por eso si definimos el queryset no lo tenemos que poner
+    #context_object_name = 'posts' #Puedes poner esta variable, o la funcion de abajo, son equivalentes, pero tener ambas es redundante. 
     #template_name = 'blog/post_list.html' no es necesario por que por defecto te busca un archivo de esta manera: <app>/<model>_list.html, en nuestro caso post_list.html
-
+    def get_queryset(self):
+        queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+        return queryset
     #Esta se podria si quisierasfiltar los resultados que te da, pero puedes ahorrartelo usando los query sets
     #def get_context_data(self, **kwargs): #llama a la calse padre para recibir un contexo
         # Call the base implementation first to get a context
@@ -27,40 +28,58 @@ class post_list(ListView):
     #    return context
 
 
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    comments = Comment.objects.filter(post=post).order_by('created_date')
+# def post_detail(request, pk):
+#     post = get_object_or_404(Post, pk=pk)
+#     comments = Comment.objects.filter(post=post).order_by('created_date')
 
-    if request.method == "POST":
-        form = CommentForm(request.POST)
+#     if request.method == "POST":
+#         form = CommentForm(request.POST)
 
-        if form.is_valid():
-                comment = form.save(commit = False)#Variable distinta a la de arriba
-                comment.author = request.user
-                comment.post = post #Lo iguala al post que recogemos arriba, que va a ser uno solo
-                comment.save()
-                return redirect('post_detail', pk=post.pk)
+#         if form.is_valid():
+#                 comment = form.save(commit = False)#Variable distinta a la de arriba
+#                 comment.author = request.user
+#                 comment.post = post #Lo iguala al post que recogemos arriba, que va a ser uno solo
+#                 comment.save()
+#                 return redirect('post_detail', pk=post.pk)
 
-    else:
-        form = CommentForm()
+#     else:
+#         form = CommentForm()
 
-    return render(request, 'blog/post_detail.html', {'post' : post,
-                                                    'comments' : comments,
-                                                    'form' : form})
+#     return render(request, 'blog/post_detail.html', {'post' : post,
+#                                                     'comments' : comments,
+#                                                     'form' : form})
+class PostDetail(DetailView):
+    model = Post
 
-@login_required(login_url='login') #decorador
-def post_new(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
 
-        if form.is_valid():
-            post = form.save(commit = False)#Esto simplemente te lo guarda en una variable antes de "subirlo" por que antes queremos anadirle el autor y eso.
-            post.author = request.user
-            post.publish()#metodo propio, lo publica y le pone fecha de publicacion
-            return redirect('post_detail', pk=post.pk)
-    else:
-        form = PostForm()
-    return render(request, 'blog/post_edit.html', {'form' : form})
+
+#@login_required(login_url='login') #decorador
+# def post_new(request):
+#     if request.method == "POST":
+#         form = PostForm(request.POST)
+
+#         if form.is_valid():
+#             post = form.save(commit = False)#Esto simplemente te lo guarda en una variable antes de "subirlo" por que antes queremos anadirle el autor y eso.
+#             post.author = request.user
+#             post.publish()#metodo propio, lo publica y le pone fecha de publicacion
+#             return redirect('post_detail', pk=post.pk)
+#     else:
+#         form = PostForm()
+#     return render(request, 'blog/post_edit.html', {'form' : form})
+class PostCreate(CreateView):
+    model = Post
+    fields = ['title','text'] #Con definir esto ya no te hace falta crear los formularios
+    template_name = 'blog/post_edit.html'
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.post = form.instance
+        form.post.author = self.request.user
+        form.post.published_date = timezone.now() #Si no le das fecha de publicacion no te apareceran luego en el post list
+        return super(PostCreate, self).form_valid(form) #Esto hace el save() por defecto
+        #ha habido que crear la funcion get_queryset en el class de post_list por que daba fallo con el filtrer
+
+
 
 @login_required(login_url='login')
 def post_edit(request, pk):
