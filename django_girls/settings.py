@@ -57,7 +57,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'django_girls.urls'
+ROOT_URLCONF = 'django_girls.urls' #Configuracion de urls base
 
 TEMPLATES = [
     {
