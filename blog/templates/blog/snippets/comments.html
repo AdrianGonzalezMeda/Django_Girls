@@ -3,18 +3,21 @@
 {% if request.user.is_authenticated %}
     <div class="post">
         <h4>Comentario nuevo</h4>
-            <form method="POST"  class="post-form">{% csrf_token %}<!-- Es cuestion de seguridad, para que no te esten bombardeando los formulariosS -->
+            <form method="POST"  class="post-form" id="new-comment">{% csrf_token %}<!-- Es cuestion de seguridad, para que no te esten bombardeando los formulariosS -->
                 {{ form | crispy }}
                 <button type="submit" class="save btn btn-default">Save</button>
             </form>
     </div>
 {% endif %}
 
- {% for comments in comments %}
+ {% for comment in comments %}
     <div class="post">
-        <p>{{ comments.text }}</p>
+        <p>{{ comment.text }}</p>
         <div class="date">
-            <p>Creado: {{ comments.created_date }}</p>
+            <p>Creado: {{ comment.created_date }}</p>
+        </div>
+        <div>
+            <a href="{% url 'comment_like' pk=comment.pk %}" class="glyphicon glyphicon-thumbs-up"></a> {{ comment.likes }} | <a href="{% url 'comment_dislike' pk=comment.pk %}" class="glyphicon glyphicon-thumbs-down"></a> {{ comment.dislikes }} 
         </div>
     </div>
 {% endfor %}

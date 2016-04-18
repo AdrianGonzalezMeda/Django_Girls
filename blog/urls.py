@@ -11,5 +11,7 @@ urlpatterns = [
     #   url(r'^post/new$', login_required(views.PostCreate.as_view(), login_url='login'), name='post_new'), #forma alternativa a crear el mixin
     url(r'^post/(?P<pk>[0-9]+)/$', views.PostDetail.as_view(), name='post_detail'), #Para definir una variable en las RegExp es con: ?P<nombre de la variable>
     url(r'^post/(?P<pk>[0-9]+)/edit$', views.PostEdit.as_view(), name='post_edit'),
-    url(r'^post/(?P<pk>[0-9]+)/delete$', views.PostDelete.as_view(), name='post_delete'),   
+    url(r'^post/(?P<pk>[0-9]+)/delete$', views.PostDelete.as_view(), name='post_delete'),
+    url(r'^comment/(?P<pk>[0-9]+)/like$', views.comment_like, name='comment_like'),
+    url(r'^comment/(?P<pk>[0-9]+)/dislike$', views.comment_dislike, name='comment_dislike'),
 ]

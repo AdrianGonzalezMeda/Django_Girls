@@ -68,18 +68,15 @@ class PostDetail(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
-        if request.method == "POST":
-            form = CommentForm(request.POST)
-            post = self.get_object() #es el objeto de la calse post detail
+        form = CommentForm(request.POST)
+        post = self.get_object() #es el objeto de la calse post detail
 
-            if form.is_valid():
-                comment = form.save(commit = False)#Variable distinta a la de arriba
-                comment.author = request.user
-                comment.post = post #Lo iguala al post que recogemos arriba, que va a ser uno solo
-                comment.save()
-                return redirect('post_detail', pk=post.pk)
-        else:
-            form = CommentForm()
+        if form.is_valid():
+            comment = form.save(commit = False)#Variable distinta a la de arriba
+            comment.author = request.user
+            comment.post = post #Lo iguala al post que recogemos arriba, que va a ser uno solo
+            comment.save()
+            return redirect('post_detail', pk=post.pk)
 
 
 #@login_required(login_url='login') #decorador
@@ -144,3 +141,15 @@ class PostDelete(LoginRequiredMixin, DeleteView): #Losmixins van primero
     
     def get_success_url(self):
         return reverse('post_list')
+
+    
+
+def comment_like(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.like()
+    return redirect('post_detail', pk=comment.post.pk)
+
+def comment_dislike(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.dislike()
+    return redirect('post_detail', pk=comment.post.pk)
