@@ -9,6 +9,14 @@ from .forms import PostForm, CommentForm
 
 
 # Create your views here.
+
+class LoginRequiredMixin(object): #Es como el decorador de login_required
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view, login_url='login')
+
+
 #def post_list(request):
 #    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
 #    return render(request, 'blog/post_list.html', {'posts' : posts}) #Lo que pasas como contexto tienes que recogerlo luego en el html con el mismo nombre que lo que pones entre comillas
@@ -66,7 +74,7 @@ class PostDetail(DetailView):
 #     else:
 #         form = PostForm()
 #     return render(request, 'blog/post_edit.html', {'form' : form})
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'text'] #Con definir esto ya no te hace falta crear los formularios
     template_name = 'blog/post_edit.html'
@@ -96,7 +104,7 @@ class PostCreate(CreateView):
 #     else:
 #         form = PostForm(instance=post)
 #     return render(request, 'blog/post_edit.html', {'form' : form, 'post' : post})
-class PostEdit(UpdateView):
+class PostEdit(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ['title', 'text']
     template_name = 'blog/post_edit.html'
@@ -110,7 +118,7 @@ class PostEdit(UpdateView):
 #     post.delete() #Te borra automaticamente los comentarios, por que estan referenciados a un post en concreto.
 #     return redirect('post_list')
 
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, DeleteView): #Losmixins van primero
     model = Post
     
     def get_success_url(self):
