@@ -70,8 +70,7 @@ class PostDetail(DetailView):
     def post(self, request, *args, **kwargs):
         if request.method == "POST":
             form = CommentForm(request.POST)
-            import ipdb; ipdb.set_trace()
-            post = self.get_object() #es el post al que estara anclado el comentario
+            post = self.get_object() #es el objeto de la calse post detail
 
             if form.is_valid():
                 comment = form.save(commit = False)#Variable distinta a la de arriba
@@ -96,7 +95,7 @@ class PostDetail(DetailView):
 #     else:
 #         form = PostForm()
 #     return render(request, 'blog/post_edit.html', {'form' : form})
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'text'] #Con definir esto ya no te hace falta crear los formularios
     template_name = 'blog/post_edit.html'
