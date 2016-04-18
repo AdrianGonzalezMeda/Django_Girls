@@ -74,7 +74,7 @@ class PostDetail(DetailView):
 #     else:
 #         form = PostForm()
 #     return render(request, 'blog/post_edit.html', {'form' : form})
-class PostCreate(LoginRequiredMixin, CreateView):
+class PostCreate(CreateView):
     model = Post
     fields = ['title', 'text'] #Con definir esto ya no te hace falta crear los formularios
     template_name = 'blog/post_edit.html'
