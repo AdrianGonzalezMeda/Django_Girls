@@ -58,15 +58,29 @@ class PostList(ListView):
 #                                                     'form' : form})
 class PostDetail(DetailView):
     model = Post
-    fields = ['title', 'text']
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(PostDetail, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         context['comments'] = Comment.objects.filter(post=self.object).order_by('created_date') #Filtra que salgan los comentarios del post en el que estan referenciados
+        context['form'] = CommentForm
         return context
 
+    def post(self, request, *args, **kwargs):
+        if request.method == "POST":
+            form = CommentForm(request.POST)
+            import ipdb; ipdb.set_trace()
+            post = self.get_object() #es el post al que estara anclado el comentario
+
+            if form.is_valid():
+                comment = form.save(commit = False)#Variable distinta a la de arriba
+                comment.author = request.user
+                comment.post = post #Lo iguala al post que recogemos arriba, que va a ser uno solo
+                comment.save()
+                return redirect('post_detail', pk=post.pk)
+        else:
+            form = CommentForm()
 
 
 #@login_required(login_url='login') #decorador
