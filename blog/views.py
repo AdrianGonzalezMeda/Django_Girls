@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
 
 from .models import Post, Comment
@@ -104,8 +104,14 @@ class PostEdit(UpdateView):
     def get_success_url(self):
         return reverse('post_detail', kwargs={'pk': self.object.pk}) #reverse hace la busqueda inversa de urls
 
-@login_required(login_url='login')
-def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    post.delete() #Te borra automaticamente los comentarios, por que estan referenciados a un post en concreto.
-    return redirect('post_list')
+# @login_required(login_url='login')
+# def post_delete(request, pk):
+#     post = get_object_or_404(Post, pk=pk)
+#     post.delete() #Te borra automaticamente los comentarios, por que estan referenciados a un post en concreto.
+#     return redirect('post_list')
+
+class PostDelete(DeleteView):
+    model = Post
+    
+    def get_success_url(self):
+        return reverse('post_list')

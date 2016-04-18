@@ -8,5 +8,5 @@ urlpatterns = [
 	url(r'^post/new$', views.PostCreate.as_view(), name='post_new'),
 	url(r'^post/(?P<pk>[0-9]+)/$', views.PostDetail.as_view(), name='post_detail'), #Para definir una variable en las RegExp es con: ?P<nombre de la variable>
 	url(r'^post/(?P<pk>[0-9]+)/edit$', views.PostEdit.as_view(), name='post_edit'),
-	url(r'^post/(?P<pk>[0-9]+)/delete$', views.post_delete, name='post_delete'),	
+	url(r'^post/(?P<pk>[0-9]+)/delete$', views.PostDelete.as_view(), name='post_delete'),	
 ]
