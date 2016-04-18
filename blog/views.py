@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.core.urlresolvers import reverse
 
 from .models import Post, Comment
@@ -68,7 +68,7 @@ class PostDetail(DetailView):
 #     return render(request, 'blog/post_edit.html', {'form' : form})
 class PostCreate(CreateView):
     model = Post
-    fields = ['title','text'] #Con definir esto ya no te hace falta crear los formularios
+    fields = ['title', 'text'] #Con definir esto ya no te hace falta crear los formularios
     template_name = 'blog/post_edit.html'
     #success_url = '/' Como no puedes poner equi el nombre de 'post_list' por que no hace bien la busqueda inversa, tienes que reescribir la funcion
 
@@ -82,20 +82,27 @@ class PostCreate(CreateView):
     def get_success_url(self):
         return reverse('post_detail', kwargs={'pk': self.object.pk}) #reverse hace la busqueda inversa de urls
 
-@login_required(login_url='login')
-def post_edit(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
+# @login_required(login_url='login')
+# def post_edit(request, pk):
+#     post = get_object_or_404(Post, pk=pk)
+#     if request.method == "POST":
+#         form = PostForm(request.POST, instance=post)
 
-        if form.is_valid():
-            post = form.save(commit = False)
-            post.author = request.user
-            post.publish()
-            return redirect('blog.views.post_detail', pk=post.pk)
-    else:
-        form = PostForm(instance=post)
-    return render(request, 'blog/post_edit.html', {'form' : form, 'post' : post})
+#         if form.is_valid():
+#             post = form.save(commit = False)
+#             post.author = request.user
+#             post.publish()
+#             return redirect('blog.views.post_detail', pk=post.pk)
+#     else:
+#         form = PostForm(instance=post)
+#     return render(request, 'blog/post_edit.html', {'form' : form, 'post' : post})
+class PostEdit(UpdateView):
+    model = Post
+    fields = ['title', 'text']
+    template_name = 'blog/post_edit.html'
+
+    def get_success_url(self):
+        return reverse('post_detail', kwargs={'pk': self.object.pk}) #reverse hace la busqueda inversa de urls
 
 @login_required(login_url='login')
 def post_delete(request, pk):
