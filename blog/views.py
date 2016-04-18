@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView
-
+from django.core.urlresolvers import reverse
 
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
@@ -16,7 +16,7 @@ class PostList(ListView):
     model = Post #hace un queryset y llama a Post.objects.all() por defecto, por eso si definimos el queryset no lo tenemos que poner
     #context_object_name = 'posts' #Puedes poner esta variable, o la funcion de abajo, son equivalentes, pero tener ambas es redundante. 
     #template_name = 'blog/post_list.html' no es necesario por que por defecto te busca un archivo de esta manera: <app>/<model>_list.html, en nuestro caso post_list.html
-    def get_queryset(self):
+    def get_queryset(self): #Si no sobreescribes este metodo, por defecto esta hecho para que solo se haga en cada refresco del servidor, por eso no mostraba los post nuevos hasta que refrescabas.
         queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
         return queryset
     #Esta se podria si quisierasfiltar los resultados que te da, pero puedes ahorrartelo usando los query sets
@@ -70,7 +70,7 @@ class PostCreate(CreateView):
     model = Post
     fields = ['title','text'] #Con definir esto ya no te hace falta crear los formularios
     template_name = 'blog/post_edit.html'
-    success_url = '/'
+    #success_url = '/' Como no puedes poner equi el nombre de 'post_list' por que no hace bien la busqueda inversa, tienes que reescribir la funcion
 
     def form_valid(self, form):
         form.post = form.instance
@@ -79,7 +79,8 @@ class PostCreate(CreateView):
         return super(PostCreate, self).form_valid(form) #Esto hace el save() por defecto
         #ha habido que crear la funcion get_queryset en el class de post_list por que daba fallo con el filtrer
 
-
+    def get_success_url(self):
+        return reverse('post_detail', kwargs={'pk': self.object.pk}) #reverse hace la busqueda inversa de urls
 
 @login_required(login_url='login')
 def post_edit(request, pk):
