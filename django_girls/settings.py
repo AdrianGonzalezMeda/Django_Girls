@@ -103,7 +103,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+#Para hacer una carpeta staticpara organizar un poco, y meter los .js mas generales
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 #Third Party APPs settings variables
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
