@@ -17,9 +17,9 @@
             <p>Creado: {{ comment.created_date }}</p>
         </div>
         <div>
-            <a href="{% url 'comment_like' pk=comment.pk %}" class="like glyphicon glyphicon-thumbs-up"></a> {{ comment.likes }}
+            <a href="{% url 'comment_like' pk=comment.pk %}" id="set_like_{{ comment.pk }}" class="like_btn glyphicon glyphicon-thumbs-up"></a><span id="val_likes_{{ comment.pk }}">{{ comment.likes }}</span>
             |
-            <a href="{% url 'comment_dislike' pk=comment.pk %}" class="dislike glyphicon glyphicon-thumbs-down"></a> {{ comment.dislikes }} 
+            <a href="{% url 'comment_dislike' pk=comment.pk %}" id="set_dislikes_{{ comment.pk }}" class="dislike_btn glyphicon glyphicon-thumbs-down"></a><span id="val_dislikes_{{ comment.pk }}">{{ comment.dislikes }}</span>
         </div>
     </div>
 {% endfor %}

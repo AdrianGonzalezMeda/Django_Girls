@@ -3,6 +3,9 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, HttpResponse
+
+import json
 
 from .models import Post, Comment
 from .forms import CommentForm
@@ -147,9 +150,21 @@ class PostDelete(LoginRequiredMixin, DeleteView): #Losmixins van primero
 def comment_like(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     comment.like()
-    return redirect('post_detail', pk=comment.post.pk)
+
+    response_data = { 'response_text_contador' : comment.likes}
+
+    return HttpResponse(
+        json.dumps(response_data),
+        content_type="application/json"
+    )
 
 def comment_dislike(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     comment.dislike()
-    return redirect('post_detail', pk=comment.post.pk)
+
+    response_data = { 'response_text_contador' : comment.dislikes}
+
+    return HttpResponse(
+        json.dumps(response_data),
+        content_type="application/json"
+    )
