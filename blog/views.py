@@ -145,9 +145,18 @@ class PostDelete(LoginRequiredMixin, DeleteView): #Losmixins van primero
     
 
 def comment_like(request, pk):
+    varlike = request.GET.get('vlike')
+    response_data = {}
+
     comment = get_object_or_404(Comment, pk=pk)
     comment.like()
-    return redirect('post_detail', pk=comment.post.pk)
+
+    response_data['like'] = varlike
+
+    return HttpResponse(
+        json.dumps(response_data),
+        content_type="application/json"
+    )
 
 def comment_dislike(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
