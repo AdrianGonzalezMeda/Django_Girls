@@ -3,12 +3,21 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, HttpResponse
+
+import json
 
 from .models import Post, Comment
 from .forms import CommentForm
+from blog.serializers import PostSerializer, CommentSerializer
+
+from rest_framework import generics
 
 
 # Create your views here.
+class PostListApi(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
 class LoginRequiredMixin(object): #Es como el decorador de login_required
     @classmethod
@@ -151,7 +160,8 @@ def comment_like(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     comment.like()
 
-    response_data['like'] = varlike
+    response_data = { 'response_text_contador' : comment.likes}
+
 
     return HttpResponse(
         json.dumps(response_data),
@@ -161,4 +171,10 @@ def comment_like(request, pk):
 def comment_dislike(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     comment.dislike()
-    return redirect('post_detail', pk=comment.post.pk)
+
+    response_data = { 'response_text_contador' : comment.dislikes}
+
+    return HttpResponse(
+        json.dumps(response_data),
+        content_type="application/json"
+    )

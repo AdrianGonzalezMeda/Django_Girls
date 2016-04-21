@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^post/(?P<pk>[0-9]+)/delete$', views.PostDelete.as_view(), name='post_delete'),
     url(r'^comment/(?P<pk>[0-9]+)/like$', views.comment_like, name='comment_like'),
     url(r'^comment/(?P<pk>[0-9]+)/dislike$', views.comment_dislike, name='comment_dislike'),
+    url(r'^list$', views.PostListApi.as_view()),
 ]
